@@ -1,24 +1,41 @@
-# intermediate files
-Win32/
-x64/
-ipch/
-resources/out/
-tinyxml2/tinyxml2-cbp/bin/
-tinyxml2/tinyxml2-cbp/obj/
-tinyxml2/bin/
-tinyxml2/temp/
-.artifacts/
-.projects/
-*.sdf
-*.suo
-*.opensdf
-*.user
-*.depend
-*.layout
-*.o
-*.vc.db
-*.vc.opendb
-libtinyxml2.a
-xmltest
-vs/debug
+# build directory
+build
 
+# # eclipse files
+.project
+.cproject
+.settings
+
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
