@@ -15,7 +15,6 @@ cp -a unixODBC4esl/src/main/* build_src/src/main/
 cp -a zsystem/src/main/*      build_src/src/main/
 cp -a zsystem4esl/src/main/*  build_src/src/main/
 cp -a esl-open/src/main/*     build_src/src/main/
-#cp -a src/main/*              build_src/src/main/
 rm -f build_src/src/main/main.cpp
 
 tbuild2 build-file=tbuild.cfg clean install
