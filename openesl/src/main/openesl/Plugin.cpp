@@ -1,4 +1,5 @@
-#include <esl/Plugin.h>
+#include <openesl/Plugin.h>
+
 #include <esl/plugin/Registry.h>
 #include <esl/object/Object.h>
 #include <esl/object/ProcessingContext.h>
@@ -45,7 +46,7 @@
 
 // zsystem4eslx
 #include <esl/system/DefaultProcess.h>
-#include <esl/system/DefaultSignal.h>
+#include <esl/system/DefaultSignalManager.h>
 #include <esl/system/DefaultStacktraceFactory.h>
 
 
@@ -53,15 +54,8 @@
 
 #include <memory>
 
-namespace esl {
+namespace openesl {
 inline namespace v1_6 {
-
-namespace {
-template <class BaseReturnValue, class ReturnValue, std::unique_ptr<ReturnValue> (*createFunction)(const std::vector<std::pair<std::string, std::string>>&)>
-std::unique_ptr<BaseReturnValue> createBase(const std::vector<std::pair<std::string, std::string>>& settings) {
-	return createFunction(settings);
-}
-}
 
 void Plugin::install(esl::plugin::Registry& registry, const char* data) {
 	esl::plugin::Registry::set(registry);
@@ -117,9 +111,9 @@ void Plugin::install(esl::plugin::Registry& registry, const char* data) {
 
 	// zsystem4esl
 	registry.addPlugin("esl/system/DefaultProcess", esl::system::DefaultProcess::create);
-	registry.addPlugin("esl/system/DefaultSignal", esl::system::DefaultSignal::create);
+	registry.addPlugin("esl/system/DefaultSignalManager", esl::system::DefaultSignalManager::create);
 	registry.addPlugin("esl/system/DefaultStacktraceFactory", esl::system::DefaultStacktraceFactory::create);
 }
 
 } /* inline namespace v1_6 */
-} /* namespace esl */
+} /* namespace openesl */

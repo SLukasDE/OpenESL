@@ -1,9 +1,9 @@
-#ifndef ESL_PLUGIN_H_
-#define ESL_PLUGIN_H_
+#ifndef OPENESL_PLUGIN_H_
+#define OPENESL_PLUGIN_H_
 
 #include <esl/plugin/Registry.h>
 
-namespace esl {
+namespace openesl {
 inline namespace v1_6 {
 
 class Plugin final {
@@ -13,6 +13,6 @@ public:
 };
 
 } /* inline namespace v1_6 */
-} /* namespace esl */
+} /* namespace openesl */
 
-#endif /* ESL_PLUGIN_H_ */
+#endif /* OPENESL_PLUGIN_H_ */
