@@ -19,10 +19,10 @@ public:
 		Settings(const std::vector<std::pair<std::string, std::string>>& settings);
 	};
 
-	GTXKeyStore();
-	GTXKeyStore(const Settings& settings);
+	GTXKeyStore(const Settings& settings = Settings());
 
 	static std::unique_ptr<KeyStore> create(const std::vector<std::pair<std::string, std::string>>& settings);
+	static std::unique_ptr<KeyStore> createNative(const Settings& settings = Settings());
 
 	void addCertificate(const std::string& hostname, const std::vector<unsigned char>& certificate) override;
 	void addPrivateKey(const std::string& hostname, const std::vector<unsigned char>& key, const std::string& password) override;

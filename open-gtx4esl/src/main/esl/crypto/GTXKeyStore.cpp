@@ -15,16 +15,16 @@ GTXKeyStore::Settings::Settings(const std::vector<std::pair<std::string, std::st
     }
 }
 
-GTXKeyStore::GTXKeyStore()
-: keyStore(new gtx4esl::crypto::KeyStore(Settings()))
-{ }
-
 GTXKeyStore::GTXKeyStore(const Settings& settings)
-: GTXKeyStore()
+: keyStore(new gtx4esl::crypto::KeyStore(settings))
 { }
 
 std::unique_ptr<KeyStore> GTXKeyStore::create(const std::vector<std::pair<std::string, std::string>>& settings) {
-	return std::unique_ptr<KeyStore>(new gtx4esl::crypto::KeyStore(Settings(settings)));
+	return std::unique_ptr<KeyStore>(new GTXKeyStore(Settings(settings)));
+}
+
+std::unique_ptr<KeyStore> GTXKeyStore::createNative(const Settings& settings) {
+	return std::unique_ptr<KeyStore>(new gtx4esl::crypto::KeyStore(settings));
 }
 
 void GTXKeyStore::addCertificate(const std::string& hostname, const std::vector<unsigned char>& certificate) {
