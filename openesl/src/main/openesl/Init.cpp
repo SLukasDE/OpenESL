@@ -1,6 +1,6 @@
 #include <openesl/Init.h>
-#include <openesl/Plugin.h>
 
+#include <esl/Plugin.h>
 #include <esl/crypto/GTXKeyStore.h>
 #include <esl/monitoring/LogbookLogging.h>
 #include <esl/plugin/Registry.h>
@@ -18,7 +18,7 @@ Init::Settings::Settings(const std::vector<std::pair<std::string, std::string>>&
 Init::Init(const Settings& settings) {
 	esl::plugin::Registry& registry = esl::plugin::Registry::get();
 
-	openesl::Plugin::install(registry, nullptr);
+	esl::Plugin::install(registry, nullptr);
 
 	esl::plugin::Registry::get().setObject(esl::crypto::GTXKeyStore::createNative(std::vector<std::pair<std::string, std::string>>()));
 
