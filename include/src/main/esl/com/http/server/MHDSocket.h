@@ -34,6 +34,7 @@ public:
 	MHDSocket(const Settings& settings);
 
 	static std::unique_ptr<Socket> create(const std::vector<std::pair<std::string, std::string>>& settings);
+	static std::unique_ptr<Socket> createNative(const Settings& settings);
 
 	/* this method is blocking. */
 	void listen(const RequestHandler& requestHandler) override;
