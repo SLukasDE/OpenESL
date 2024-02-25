@@ -29,7 +29,7 @@ namespace object {
 
 class Cloneable : public virtual Object {
 public:
-	virtual std::unique_ptr<Object> clone() const = 0;
+	virtual std::unique_ptr<Cloneable> clone() const = 0;
 };
 
 } /* namespace object */
