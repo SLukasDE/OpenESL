@@ -360,6 +360,7 @@ std::string String::fromURLEncoded(const std::string& urlEncodedStr) {
 			std::string part = urlEncodedStr.substr(i+1, i+2 == urlEncodedStr.size() ? 1 : 2);
 			char c = std::stoul(part, nullptr, 16);
 			rv += c;
+			i += (i+2 == urlEncodedStr.size()) ? 1 : 2;
 		}
 	}
 
