@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef ESA_CRYPTO_PUBLICKEY_H_
-#define ESA_CRYPTO_PUBLICKEY_H_
+#ifndef ESA_CRYPTO_HASH_H_
+#define ESA_CRYPTO_HASH_H_
 
 #include <esa/object/Object.h>
 
@@ -31,14 +31,13 @@ namespace esa {
 inline namespace v1_6 {
 namespace crypto {
 
-class PublicKey : public object::Object {
+class Hash : public object::Object {
 public:
-	virtual std::string encrypt(const std::string& plaintext) const = 0;
-	virtual bool verifySignature(const std::string& data, const std::string& signature, const std::string& algorithm /*= "RS512"*/) const = 0;
+	virtual std::string calculateHash(const std::string& data, const std::string& algorithm /*= "SHA256"*/) const = 0;
 };
 
 } /* namespace crypto */
 } /* inline namespace v1_6 */
 } /* namespace esa */
 
-#endif /* ESA_CRYPTO_PUBLICKEY_H_ */
+#endif /* ESA_CRYPTO_HASH_H_ */
