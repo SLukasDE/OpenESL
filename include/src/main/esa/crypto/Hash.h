@@ -20,25 +20,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef ESA_OBJECT_COMMAND_H_
-#define ESA_OBJECT_COMMAND_H_
+#ifndef ESA_CRYPTO_HASH_H_
+#define ESA_CRYPTO_HASH_H_
 
 #include <esa/object/Object.h>
 
-#include <memory>
 #include <string>
 
 namespace esa {
 inline namespace v1_6 {
-namespace object {
+namespace crypto {
 
-class Command : public virtual Object {
+class Hash : public object::Object {
 public:
-	virtual std::unique_ptr<Object> runCommand(const std::string& command, Object* argument) = 0;
+	virtual std::string calculateHash(const std::string& data, const std::string& algorithm /*= "SHA256"*/) const = 0;
 };
 
-} /* namespace object */
+} /* namespace crypto */
 } /* inline namespace v1_6 */
 } /* namespace esa */
 
-#endif /* ESA_OBJECT_COMMAND_H_ */
+#endif /* ESA_CRYPTO_HASH_H_ */

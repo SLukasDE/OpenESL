@@ -20,7 +20,6 @@ namespace server {
 class MHDSocket : public Socket {
 public:
 	struct Settings {
-		Settings() = default;
 		Settings(const std::vector<std::pair<std::string, std::string>>& settings);
 
 		bool https = false;
