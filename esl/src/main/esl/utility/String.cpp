@@ -208,6 +208,20 @@ char String::fromEscapeSequence(std::string::const_iterator& escapeSequenceItera
 	return c;
 }
 
+std::string String::toBase16(const std::string& input) {
+	std::vector<char> output;
+	output.resize(1 + (input.size() * 2));
+
+	char* outputCurrent = &output[0];
+
+	for(auto inputCurrent : input) {
+		std::snprintf(outputCurrent, 3, "%.2x ", static_cast<const unsigned char>(inputCurrent));
+		outputCurrent += 2;
+	}
+
+	return std::string(&output[0], input.size() * 2);
+}
+
 std::string String::toBase64(const std::string& str, Base64Variant base64Variant, bool withPadding) {
 	std::string result;
 
