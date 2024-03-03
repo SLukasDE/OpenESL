@@ -139,12 +139,12 @@ void Logging::flush(std::ostream* oStream) {
 }
 
 void Logging::addData(const std::string& configuration) {
-	config::Logger loggerConfig(configuration);
+	config::Logger loggerConfig(false, configuration);
 	loggerConfig.install(*this);
 }
 
-void Logging::addFile(const boost::filesystem::path& filename) {
-	config::Logger loggerConfig(filename);
+void Logging::addFile(const std::string& filename) {
+	config::Logger loggerConfig(true, filename);
 	loggerConfig.install(*this);
 }
 
