@@ -10,6 +10,7 @@
 #find_package_unixODBC4esl()
 
 #find_package_TinyXML2()
+#find_package_RapidJSON()
 #find_package_logbook()
 #find_package_zsystem()
 #find_package_GnuTLS()
@@ -73,51 +74,63 @@ function(find_custom_package NAME URL TAG)
 endfunction()
 
 function(find_package_esa)
-    find_custom_package(esa https://github.com/SLukasDE/esa master)
+    add_subdirectory(thirdparty/esa)
+    #find_custom_package(esa https://github.com/SLukasDE/esa master)
 endfunction()
 
 function(find_package_esl)
-    find_custom_package(esl https://github.com/SLukasDE/esl master)
+    add_subdirectory(thirdparty/esl)
+    #find_custom_package(esl https://github.com/SLukasDE/esl master)
 endfunction()
 
 function(find_package_common4esl)
-    find_custom_package(common4esl https://github.com/SLukasDE/common4esl main)
+    add_subdirectory(thirdparty/common4esl)
+    #find_custom_package(common4esl https://github.com/SLukasDE/common4esl main)
 endfunction()
 
 function(find_package_logbook)
-    find_custom_package(logbook https://github.com/SLukasDE/logbook master)
+    add_subdirectory(thirdparty/logbook)
+    #find_custom_package(logbook https://github.com/SLukasDE/logbook master)
 endfunction()
 
 function(find_package_logbook4esl)
-    find_custom_package(logbook4esl https://github.com/SLukasDE/logbook4esl master)
+    add_subdirectory(thirdparty/logbook4esl)
+    #find_custom_package(logbook4esl https://github.com/SLukasDE/logbook4esl master)
 endfunction()
 
 function(find_package_zsystem)
-    find_custom_package(zsystem https://github.com/SLukasDE/zsystem master)
+    add_subdirectory(thirdparty/zsystem)
+    #find_custom_package(zsystem https://github.com/SLukasDE/zsystem master)
 endfunction()
 
 function(find_package_zsystem4esl)
-    find_custom_package(zsystem4esl https://github.com/SLukasDE/zsystem4esl master)
+    add_subdirectory(thirdparty/zsystem4esl)
+    #find_custom_package(zsystem4esl https://github.com/SLukasDE/zsystem4esl master)
 endfunction()
 
 function(find_package_opengtx4esl)
-    find_custom_package(opengtx4esl https://github.com/SLukasDE/opengtx4esl main)
+    add_subdirectory(thirdparty/opengtx4esl)
+    #find_custom_package(opengtx4esl https://github.com/SLukasDE/opengtx4esl main)
 endfunction()
 
 function(find_package_curl4esl)
-    find_custom_package(curl4esl https://github.com/SLukasDE/curl4esl master)
+    add_subdirectory(thirdparty/curl4esl)
+    #find_custom_package(curl4esl https://github.com/SLukasDE/curl4esl master)
 endfunction()
 
 function(find_package_mhd4esl)
-    find_custom_package(mhd4esl https://github.com/SLukasDE/mhd4esl master)
+    add_subdirectory(thirdparty/mhd4esl)
+    #find_custom_package(mhd4esl https://github.com/SLukasDE/mhd4esl master)
 endfunction()
 
 function(find_package_sqlite4esl)
-    find_custom_package(sqlite4esl https://github.com/SLukasDE/sqlite4esl main)
+    add_subdirectory(thirdparty/sqlite4esl)
+    #find_custom_package(sqlite4esl https://github.com/SLukasDE/sqlite4esl main)
 endfunction()
 
 function(find_package_odbc4esl)
-    find_custom_package(odbc4esl https://github.com/SLukasDE/odbc4esl main)
+    add_subdirectory(thirdparty/odbc4esl)
+    #find_custom_package(odbc4esl https://github.com/SLukasDE/odbc4esl main)
 endfunction()
 
 function(find_package_TinyXML2)
@@ -154,6 +167,58 @@ function(find_package_TinyXML2)
         message(FATAL_ERROR "TARGET tinyxml2::tinyxml2 does not exists")
     endif()
 endfunction()
+
+
+function(find_package_RapidJSON)
+    # Default, try 'find_package'. VCPKG or Conan may be used, if enabled
+    if(NOT RapidJSON_FOUND)
+        message(STATUS "Try to find RapidJSON by find_package")
+        find_package(RapidJSON QUIET)
+        if(RapidJSON_FOUND)
+            message(STATUS "RapidJSON has been found by using find_package")
+        endif()
+    endif()
+
+    if(NOT RapidJSON_FOUND)
+        message(STATUS "Try to find RapidJSON by FetchContent")
+
+        set(RAPIDJSON_BUILD_DOC OFF CACHE BOOL "" FORCE)
+        set(RAPIDJSON_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+        set(RAPIDJSON_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+        #set(RAPIDJSON_BUILD_CXX17 ON CACHE BOOL "" FORCE)
+        
+        FetchContent_Declare(
+            RapidJSON
+            GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
+            GIT_TAG v1.1.0
+            GIT_SHALLOW TRUE
+            OVERRIDE_FIND_PACKAGE # 'find_package(...)' will call 'FetchContent_MakeAvailable(...)'
+        )
+        find_package(RapidJSON QUIET)
+        #message(STATUS "XXXXXXXXXXXXXXXXXXXXXXXX rapidjson_SOURCE_DIR: ${rapidjson_SOURCE_DIR}")
+        #message(STATUS "RapidJSON_DIR:        ${RapidJSON_DIR}")
+
+        #add_library(RapidJSON::RapidJSON UNKNOWN IMPORTED)
+        add_library(RapidJSON::RapidJSON INTERFACE IMPORTED)
+        set_target_properties(RapidJSON::RapidJSON PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${rapidjson_SOURCE_DIR}/include")
+
+        if(RapidJSON_FOUND)
+            message(STATUS "RapidJSON has been found by using FetchContent")
+        endif()
+    endif()
+
+    #if(TARGET RapidJSON::RapidJSON)
+    #    message(STATUS "TARGET RapidJSON::RapidJSON exists")
+    #else()
+    #    message(FATAL_ERROR "TARGET RapidJSON::RapidJSON does not exists")
+    #endif()
+
+    if(NOT RapidJSON_FOUND)
+        message(FATAL_ERROR "RapidJSON NOT found")
+    endif()
+endfunction()
+
 
 function(find_package_GnuTLS) # GnuTLS::GnuTLS
     # Default, try 'find_package'. VCPKG or Conan is used, if enabled
@@ -239,6 +304,7 @@ function(find_package_GnuTLS) # GnuTLS::GnuTLS
         message(FATAL_ERROR "GnuTLS NOT found")
     endif()
 endfunction()
+
 
 function(find_package_CURL) # CURL::libcurl
     if(BUILD_SHARED_LIBS)

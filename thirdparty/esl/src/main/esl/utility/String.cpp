@@ -215,7 +215,8 @@ std::string String::toBase16(const std::string& input) {
 	char* outputCurrent = &output[0];
 
 	for(auto inputCurrent : input) {
-		std::snprintf(outputCurrent, 3, "%.2x ", static_cast<const unsigned char>(inputCurrent));
+		/* '%.2x' is the same as '%02x'. But du we better want to use '%.2X' or '%02X%' ? */
+		std::snprintf(outputCurrent, 3, "%.2x", static_cast<const unsigned char>(inputCurrent));
 		outputCurrent += 2;
 	}
 
@@ -347,7 +348,8 @@ std::string String::toURLEncoded(const std::string& str) {
 		}
 		else {
 			char buffer[3];
-			std::snprintf(buffer, 2, "%02x", static_cast<char>(c));
+			/* '%.2x' is the same as '%02x'. But du we better want to use '%.2X' or '%02X%' ? */
+			std::snprintf(buffer, 3, "%02x", static_cast<char>(c));
 			rv += '%';
 			rv += buffer;
 		}

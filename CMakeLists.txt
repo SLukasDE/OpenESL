@@ -20,14 +20,14 @@ option(COMPILE_UNITTESTS           "Weather to compile unittests"               
 option(ESL_DEPENDENCIES_USE_CONAN  "Weather to use Conan as package manager to fetch dependencies"         OFF)
 option(ESL_DEPENDENCIES_USE_VCPKG  "Weather to use Vcpkg as package manager to fetch dependencies"         OFF)
 
-option(OPENESL_USE_COMMON4ESL   "Weather to include common4esl"   OFF) #
-option(OPENESL_USE_LOGBOOK4ESL  "Weather to include logbook4esl"  OFF) #
-option(OPENESL_USE_ZSYSTEM4ESL  "Weather to include zsystem4esl"  OFF)
-option(OPENESL_USE_OPENGTX4ESL  "Weather to include opengtx4esl"  OFF) #
-option(OPENESL_USE_CURL4ESL     "Weather to include curl4esl"     OFF) #
-option(OPENESL_USE_MHD4ESL      "Weather to include mhd4esl"      OFF) #
-option(OPENESL_USE_SQLITE4ESL   "Weather to include sqlite4esl"   OFF) #
-option(OPENESL_USE_ODBC4ESL     "Weather to include odbc4esl"     OFF)
+option(OPENESL_USE_COMMON4ESL   "Weather to include common4esl"   ON) #
+option(OPENESL_USE_LOGBOOK4ESL  "Weather to include logbook4esl"  ON) #
+option(OPENESL_USE_ZSYSTEM4ESL  "Weather to include zsystem4esl"  ON)
+option(OPENESL_USE_OPENGTX4ESL  "Weather to include opengtx4esl"  ON) #
+option(OPENESL_USE_CURL4ESL     "Weather to include curl4esl"     ON) #
+option(OPENESL_USE_MHD4ESL      "Weather to include mhd4esl"      ON) #
+option(OPENESL_USE_SQLITE4ESL   "Weather to include sqlite4esl"   ON) #
+option(OPENESL_USE_ODBC4ESL     "Weather to include odbc4esl"     ON)
 
 ####################
 # fix dependencies #

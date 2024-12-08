@@ -45,9 +45,14 @@ std::string formatTimestamp(const std::time_t& timestamp) {
     char timeStr[23];
     struct tm timeBuf;
     struct tm* timePtr;
-
+#ifdef _WIN32
+    localtime_s(&timeBuf, &timestamp);
+    timePtr = &timeBuf;
+#else
     timePtr = localtime_r(&timestamp, &timeBuf);
-    sprintf(timeStr, "$ %04d-%02d-%02d %02d:%02d:%02d ",
+#endif
+
+    snprintf(timeStr, 23, "$ %04d-%02d-%02d %02d:%02d:%02d ",
             timePtr->tm_year + 1900,
             timePtr->tm_mon  + 1,
             timePtr->tm_mday,
@@ -65,15 +70,15 @@ std::string formatTimestamp(const std::chrono::time_point<std::chrono::system_cl
 
 std::string formatLevel(esl::monitoring::Streams::Level level) {
     switch(level) {
-    case esl::monitoring::Streams::Level::TRACE:
+    case esl::monitoring::Streams::Level::trace:
     	return "[TRACE] ";
-    case esl::monitoring::Streams::Level::DEBUG:
+    case esl::monitoring::Streams::Level::debug:
     	return "[DEBUG] ";
-    case esl::monitoring::Streams::Level::INFO:
+    case esl::monitoring::Streams::Level::info:
     	return "[INFO ] ";
-    case esl::monitoring::Streams::Level::WARN:
+    case esl::monitoring::Streams::Level::warn:
     	return"[WARN ] ";
-    case esl::monitoring::Streams::Level::ERROR:
+    case esl::monitoring::Streams::Level::error:
     	return "[ERROR] ";
     default:
         break;

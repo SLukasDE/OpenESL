@@ -43,7 +43,6 @@
 #include <stdexcept>
 #include <string>
 
-#include <iostream>
 namespace mhd4esl {
 inline namespace v1_6 {
 namespace com {
@@ -286,7 +285,7 @@ bool Socket::wait(std::uint32_t ms) {
 	}
 }
 
-int Socket::mhdAcceptHandler(void* cls,
+MHD_Result Socket::mhdAcceptHandler(void* cls,
 		MHD_Connection* mhdConnection,
 		const char* url,
 		const char* method,

@@ -1,7 +1,7 @@
 #ifndef COMMON4ESL_CONFIG_CONFIG_H_
 #define COMMON4ESL_CONFIG_CONFIG_H_
 
-#include <tinyxml2/tinyxml2.h>
+#include <tinyxml2.h>
 
 #include <string>
 #include <utility>

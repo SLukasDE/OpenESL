@@ -53,8 +53,8 @@ public:
 
 	explicit operator bool() const noexcept;
 
-	Producer& getProducer() const noexcept;
-	Reader& getReader() const noexcept;
+	Producer& getProducer() const;
+	Reader& getReader() const;
 
 private:
 	std::unique_ptr<Producer> producerGenerated;

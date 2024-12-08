@@ -38,18 +38,18 @@ namespace monitoring {
 namespace {
 logbook::Level eslLoggingLevel2logbookLevel(esl::monitoring::Streams::Level logLevel) {
 	switch(logLevel) {
-	case esl::monitoring::Streams::Level::TRACE:
-		return logbook::Level::TRACE;
-	case esl::monitoring::Streams::Level::DEBUG:
-		return logbook::Level::DEBUG;
-	case esl::monitoring::Streams::Level::INFO:
-		return logbook::Level::INFO;
-	case esl::monitoring::Streams::Level::WARN:
-		return logbook::Level::WARN;
-	case esl::monitoring::Streams::Level::ERROR:
-		return logbook::Level::ERROR;
-	case esl::monitoring::Streams::Level::SILENT:
-		return logbook::Level::SILENT;
+	case esl::monitoring::Streams::Level::trace:
+		return logbook::Level::trace;
+	case esl::monitoring::Streams::Level::debug:
+		return logbook::Level::debug;
+	case esl::monitoring::Streams::Level::info:
+		return logbook::Level::info;
+	case esl::monitoring::Streams::Level::warn:
+		return logbook::Level::warn;
+	case esl::monitoring::Streams::Level::error:
+		return logbook::Level::error;
+	case esl::monitoring::Streams::Level::silent:
+		return logbook::Level::silent;
 	default:
 		break;
 	}
