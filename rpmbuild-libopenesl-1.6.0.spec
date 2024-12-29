@@ -27,12 +27,12 @@ cp -a ../../build/open-esl/1.6.0/default/architecture/linux-gcc/link-dynamic/lib
 ln -s libopenesl.so.1.6.0 $RPM_BUILD_ROOT/usr/lib64/libopenesl.so.1.6
 ln -s libopenesl.so.1.6.0 $RPM_BUILD_ROOT/usr/lib64/libopenesl.so
 
-cp -a ../../old/libeslx.so.1.4.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.5.1
-ln -s libeslx.so.1.5.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.5
+#cp -a ../../old/libeslx.so.1.4.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.5.1
+#ln -s libeslx.so.1.5.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.5
 
-cp -a ../../old/libeslx.so.1.4.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.4.1
-ln -s libeslx.so.1.4.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.4
-cp -a ../../old/libcurl4esl_fix1.so $RPM_BUILD_ROOT/usr/lib64/libcurl4esl_fix1.so
+#cp -a ../../old/libeslx.so.1.4.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.4.1
+#ln -s libeslx.so.1.4.1 $RPM_BUILD_ROOT/usr/lib64/libeslx.so.1.4
+#cp -a ../../old/libcurl4esl_fix1.so $RPM_BUILD_ROOT/usr/lib64/libcurl4esl_fix1.so
 
 exit
 
@@ -41,11 +41,11 @@ exit
 %attr(0777, root, root) /usr/lib64/libopenesl.so.1.6
 %attr(0777, root, root) /usr/lib64/libopenesl.so
 %attr(0644, root, root) /usr/lib64/libopenesl.a
-%attr(0755, root, root) /usr/lib64/libeslx.so.1.5.1
-%attr(0777, root, root) /usr/lib64/libeslx.so.1.5
-%attr(0755, root, root) /usr/lib64/libeslx.so.1.4.1
-%attr(0777, root, root) /usr/lib64/libeslx.so.1.4
-%attr(0755, root, root) /usr/lib64/libcurl4esl_fix1.so
+#%attr(0755, root, root) /usr/lib64/libeslx.so.1.5.1
+#%attr(0777, root, root) /usr/lib64/libeslx.so.1.5
+#%attr(0755, root, root) /usr/lib64/libeslx.so.1.4.1
+#%attr(0777, root, root) /usr/lib64/libeslx.so.1.4
+#%attr(0755, root, root) /usr/lib64/libcurl4esl_fix1.so
 
 %pre
 

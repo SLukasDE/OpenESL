@@ -1,6 +1,7 @@
 # build directory
 build
 build_src
+.bash_history
 
 # # eclipse files
 .project

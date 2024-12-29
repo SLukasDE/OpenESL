@@ -3,20 +3,20 @@
 rm -rf src ; mkdir -p src/main
 rm -rf include ; mkdir -p include/src/main
 
-cp -a common4esl/src/main/*   src/main/
-cp -a curl4esl/src/main/*     src/main/
-cp -a esa/src/main/*          src/main/
-cp -a esl/src/main/*          src/main/
-cp -a logbook/src/main/*      src/main/
-cp -a logbook4esl/src/main/*  src/main/
-cp -a mhd4esl/src/main/*      src/main/
-cp -a open-gtx4esl/src/main/* src/main/
-cp -a sqlite4esl/src/main/*   src/main/
-cp -a tinyxml2/src/main/*     src/main/
-cp -a unixODBC4esl/src/main/* src/main/
-cp -a zsystem/src/main/*      src/main/
-cp -a zsystem4esl/src/main/*  src/main/
-cp -a openesl/src/main/*       src/main/
+cp -a thirdparty/common4esl/src/main/*   src/main/
+cp -a thirdparty/curl4esl/src/main/*     src/main/
+cp -a thirdparty/esa/src/main/*          src/main/
+cp -a thirdparty/esl/src/main/*          src/main/
+cp -a thirdparty/logbook/src/main/*      src/main/
+cp -a thirdparty/logbook4esl/src/main/*  src/main/
+cp -a thirdparty/mhd4esl/src/main/*      src/main/
+cp -a thirdparty/odbc4esl/src/main/*     src/main/
+cp -a thirdparty/opengtx4esl/src/main/*  src/main/
+cp -a thirdparty/sqlite4esl/src/main/*   src/main/
+cp -a thirdparty/tinyxml2/src/main/*     src/main/
+cp -a thirdparty/zsystem/src/main/*      src/main/
+cp -a thirdparty/zsystem4esl/src/main/*  src/main/
+cp -a openesl/src/main/*                 src/main/
 
 # create include files
 # --------------------
@@ -46,3 +46,4 @@ rm -rf rpm
 
 rm -rf src
 rm -rf build
+rm -rf include

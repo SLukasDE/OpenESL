@@ -1,5 +1,21 @@
-#include <openesl/Config.hpp>
 #include <openesl/Plugin.h>
+
+#if __has_include(<openesl/Config.hpp>)
+/* if we build with CMake */
+#include <openesl/Config.hpp>
+#else
+#ifdef TRANSFORMER_ARTEFACT_NAME
+/* if we build with TBuild */
+#define ESL_USE_COMMON4ESL   1
+#define ESL_USE_CURL4ESL     1
+#define ESL_USE_LOGBOOK4ESL  1
+#define ESL_USE_MHD4ESL      1
+#define ESL_USE_SQLITE4ESL   1
+#define ESL_USE_ODBC4ESL     1
+#define ESL_USE_ZSYSTEM4ESL  1
+#define ESL_USE_OPENGTX4ESL  1
+#endif
+#endif
 
 #include <esl/plugin/Registry.h>
 #include <esl/object/Object.h>
