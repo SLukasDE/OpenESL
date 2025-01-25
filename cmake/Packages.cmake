@@ -1,4 +1,3 @@
-#find_package_esa()
 #find_package_esl()
 #find_package_common4esl()
 #find_package_logbook4esl()
@@ -73,11 +72,6 @@ function(find_custom_package NAME URL TAG)
     endif()
 endfunction()
 
-function(find_package_esa)
-    add_subdirectory(thirdparty/esa)
-    #find_custom_package(esa https://github.com/SLukasDE/esa master)
-endfunction()
-
 function(find_package_esl)
     add_subdirectory(thirdparty/esl)
     #find_custom_package(esl https://github.com/SLukasDE/esl master)
@@ -134,6 +128,8 @@ function(find_package_odbc4esl)
 endfunction()
 
 function(find_package_TinyXML2)
+    #add_subdirectory(thirdparty/tinyxml2)
+
     # Default, try 'find_package'. VCPKG or Conan may be used, if enabled
     if(NOT tinyxml2_FOUND)
         message(STATUS "Try to find TinyXML2 by find_package")

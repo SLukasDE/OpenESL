@@ -80,7 +80,7 @@
 #include <esl/crypto/GTXKeyStore.h>
 #endif
 
-#include <esa/object/ProcessingContext.h>
+#include <esl/object/ProcessingContext.h>
 
 #include <memory>
 
@@ -88,9 +88,9 @@ namespace openesl {
 inline namespace v1_6 {
 
 namespace {
-template <class BaseReturnValue, class ReturnValue, std::unique_ptr<ReturnValue> (*createFunction)(const std::vector<std::pair<std::string, std::string>>&)>
-std::unique_ptr<BaseReturnValue> createBase(const std::vector<std::pair<std::string, std::string>>& settings) {
-	return createFunction(settings);
+template <class InterfaceClass, class ImplementationClass, class Settings>
+std::unique_ptr<InterfaceClass> create(const std::vector<std::pair<std::string, std::string>>& settings) {
+	return std::unique_ptr<InterfaceClass>(new ImplementationClass(Settings(settings)));
 }
 }
 
@@ -116,14 +116,15 @@ void Plugin::install(esl::plugin::Registry& registry, const char* data) {
 	registry.addPlugin("esl/object/ExceptionHandlerProcedure", esl::object::ExceptionHandlerProcedure::create);
 	registry.addPlugin("esl/object/SimpleContext", esl::object::SimpleContext::create);
 	registry.addPlugin("esl/object/SimpleProcessingContext", esl::object::SimpleProcessingContext::create);
-	registry.addPlugin<esa::object::ProcessingContext, esl::object::ProcessingContext, esl::object::SimpleProcessingContext::create>("esl/object/SimpleProcessingContext");
+	registry.addPlugin<esl::object::ProcessingContext, esl::object::ProcessingContext, esl::object::SimpleProcessingContext::create>("esl/object/SimpleProcessingContext");
 	registry.addPlugin("esl/system/DefaultTaskFactory", esl::system::DefaultTaskFactory::create);
 	registry.addPlugin<esl::object::Object, esl::system::TaskFactory, esl::system::DefaultTaskFactory::create>("esl/system/DefaultTaskFactory");
 #endif
 
 	// curl4esl
 #if ESL_USE_CURL4ESL == 1
-	registry.addPlugin("esl/com/http/client/CURLConnectionFactory", esl::com::http::client::CURLConnectionFactory::create);
+	registry.addPlugin("esl/com/http/client/CURLConnectionFactory", create<esl::com::http::client::ConnectionFactory, esl::com::http::client::CURLConnectionFactory, esl::com::http::client::CURLConnectionFactory::Settings>);
+//	registry.addPlugin("esl/com/http/client/CURLConnectionFactory", esl::com::http::client::CURLConnectionFactory::create);
 #endif
 
 	// logbook4esl

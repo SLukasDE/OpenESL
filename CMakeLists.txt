@@ -93,9 +93,6 @@ function(add_esl_feature feature dependency)
 endfunction()
 
 
-find_package_esa()
-add_esl_feature(esa "")
-
 find_package_esl()
 add_esl_feature(esl "")
 

@@ -1,5 +1,4 @@
-ESL has been renamed to ESA (Enterprise Support API) and this is the new reference implementation, that has been called ESLX previously.
-For every class that has been movoed to ESA, there exists a corresponding class in ESL with a "typedef" to the ESA class. This means it's not necessary to rewrite your code that used ESL, that has been renamed to ESA. Just continue using the header files this project.
+ESLX has been renamed to OpenESL.
 
 Following ESLX registry ID string have been changed:
 old string: "eslx/logging/DefaultLayout"             -> new string: "esl/monitoring/SimpleLayout"

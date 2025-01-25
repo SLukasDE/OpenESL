@@ -16,11 +16,11 @@ project(tinyxml2 VERSION 2.0.0
 #add_subdirectory(src/main)
 # STATIC, SHARED, MODULE, INTERFACE
 add_library(tinyxml2 STATIC
-        ./src/main/tinyxml2/tinyxml2.cpp
-        ./src/main/tinyxml2/tinyxml2.h
+        ./src/main/tinyxml2.cpp
+        ./src/main/tinyxml2.h
 )
 
-target_include_directories(tinyxml2 PUBLIC ./src/main)
+#target_include_directories(tinyxml2 PUBLIC ./src/main)
 target_compile_features(tinyxml2 PUBLIC cxx_std_11)
 set_property(TARGET tinyxml2 PROPERTY POSITION_INDEPENDENT_CODE ON)
 
