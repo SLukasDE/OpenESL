@@ -21,22 +21,17 @@ Open ESL development files.
 #echo "BUILDROOT = $RPM_BUILD_ROOT"
 #echo "Current path: $PWD"
 
-mkdir -p $RPM_BUILD_ROOT/usr/include/esa-1.6.0
 mkdir -p $RPM_BUILD_ROOT/usr/include/esl-1.6.0
 
-cp -a ../../include/src/main/esa/*    $RPM_BUILD_ROOT/usr/include/esa-1.6.0
 cp -a ../../include/src/main/esl/*    $RPM_BUILD_ROOT/usr/include/esl-1.6.0
 
 cd ../../rpm/BUILD
-ln -s esa-1.6.0    $RPM_BUILD_ROOT/usr/include/esa
 ln -s esl-1.6.0    $RPM_BUILD_ROOT/usr/include/esl
 
 exit
 
 %files
 %defattr(644, root, root, 755)
-/usr/include/esa-1.6.0
-/usr/include/esa
 /usr/include/esl-1.6.0
 /usr/include/esl
 
@@ -47,7 +42,6 @@ exit
 %postun
 
 %clean
-rm -rf $RPM_BUILD_ROOT/usr/include/esa
 rm -rf $RPM_BUILD_ROOT/usr/include/esl
 
 %changelog
