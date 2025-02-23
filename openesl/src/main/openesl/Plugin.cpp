@@ -17,7 +17,6 @@
 #endif
 #endif
 
-#include <esl/plugin/Registry.h>
 #include <esl/object/Object.h>
 #include <esl/object/ProcessingContext.h>
 #include <esl/system/TaskFactory.h>
