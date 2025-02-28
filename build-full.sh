@@ -5,7 +5,6 @@ rm -rf include ; mkdir -p include/src/main
 
 cp -a thirdparty/common4esl/src/main/*   src/main/
 cp -a thirdparty/curl4esl/src/main/*     src/main/
-cp -a thirdparty/esa/src/main/*          src/main/
 cp -a thirdparty/esl/src/main/*          src/main/
 cp -a thirdparty/logbook/src/main/*      src/main/
 cp -a thirdparty/logbook4esl/src/main/*  src/main/
@@ -20,11 +19,10 @@ cp -a openesl/src/main/*                 src/main/
 
 # create include files
 # --------------------
-cp -a src/main/esa include/src/main
 cp -a src/main/esl include/src/main
 find ./include/src/main -name '*.cpp' -delete
 cp build-full.cfg include/tbuild.cfg
-cd include ; tbuild2 generate cdt-project architecture=linux ; cd ..
+#cd include ; tbuild generate cdt-project architecture=linux ; cd ..
 rm -rf include/.tbuild
 rm -rf include/build
 rm -f include/tbuild.cfg
@@ -32,15 +30,15 @@ rm -f include/tbuild.cfg
 # build openesl
 # -------------
 rm -f src/main/main.cpp
-tbuild2 build-file=build-full.cfg clean install
+tbuild build-file=build-full.cfg clean install
 
-#rpmbuild --define "_topdir `pwd`/rpm" --target x86_64 -bb rpmbuild-libopenesl-1.6.0.spec
-toolcontainer rpmbuild --define "_topdir /workspace/rpm" --target x86_64 -bb rpmbuild-libopenesl-1.6.0.spec
+rpmbuild --define "_topdir `pwd`/rpm" --target x86_64 -bb rpmbuild-libopenesl-1.6.0.spec
+#rpmbuild --define "_topdir /workspace/rpm" --target x86_64 -bb rpmbuild-libopenesl-1.6.0.spec
 mv rpm/RPMS/x86_64/*.rpm .
 rm -rf rpm
 
-#rpmbuild --define "_topdir `pwd`/rpm" --target x86_64 -bb rpmbuild-libopenesl-devel-1.6.0.spec
-toolcontainer rpmbuild --define "_topdir /workspace/rpm" --target x86_64 -bb rpmbuild-libopenesl-devel-1.6.0.spec
+rpmbuild --define "_topdir `pwd`/rpm" --target x86_64 -bb rpmbuild-libopenesl-devel-1.6.0.spec
+#rpmbuild --define "_topdir /workspace/rpm" --target x86_64 -bb rpmbuild-libopenesl-devel-1.6.0.spec
 mv rpm/RPMS/x86_64/*.rpm .
 rm -rf rpm
 
