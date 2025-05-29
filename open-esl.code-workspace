@@ -1,0 +1,64 @@
+{
+	"folders": [
+		{
+			"name": "Main-ESL",
+			"path": "thirdparty/esl/src/main"
+		},
+		{
+			"name": "Main-Common4esl",
+			"path": "thirdparty/common4esl/src/main"
+		},
+		{
+			"name": "Main-Curl4esl",
+			"path": "thirdparty/curl4esl/src/main"
+		},
+		{
+			"name": "Main-Logbook",
+			"path": "thirdparty/logbook/src/main"
+		},
+		{
+			"name": "Main-Logbook4esl",
+			"path": "thirdparty/logbook4esl/src/main"
+		},
+		{
+			"name": "Main-MHD4esl",
+			"path": "thirdparty/mhd4esl/src/main"
+		},
+		{
+			"name": "Main-ODBC4esl",
+			"path": "thirdparty/odbc4esl/src/main"
+		},
+		{
+			"name": "Main-OpenGTX4esl",
+			"path": "thirdparty/opengtx4esl/src/main"
+		},
+		{
+			"name": "Main-SQLite4esl",
+			"path": "thirdparty/sqlite4esl/src/main"
+		},
+		{
+			"name": "Main-TinyXML2",
+			"path": "thirdparty/tinyxml2/src/main"
+		},
+		{
+			"name": "Main-ZSystem",
+			"path": "thirdparty/zsystem/src/main"
+		},
+		{
+			"name": "Main-ZSystem4esl",
+			"path": "thirdparty/zsystem4esl/src/main"
+		},
+		{
+			"name": "Main-OpenESL",
+			"path": "openesl/src/main"
+		}
+	],
+	"settings": {
+	    "_commentC_Cpp.errorSquiggles": "disabled",
+		"workbench.editor.labelFormat": "short",
+		"editor.accessibilityPageSize": 500,
+		"files.readonlyInclude": {
+			"**/thirdparty/common4esl/src/main/esl/io/FilePosition.cpp": true
+		}
+	}
+}

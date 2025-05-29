@@ -1,0 +1,62 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "CMake: build",
+			"type": "cmake",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "CMake template build task"
+		},
+		{
+			"label": "configure all",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"-B", "${workspaceFolder}/../../../build",
+				"-S", "${workspaceFolder}/../../..",
+				"-DCMAKE_BUILD_TYPE=Debug"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/../../.."
+			}
+		},
+		{
+			"label": "build all",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"${workspaceFolder}/../../../build"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/../../.."
+			}
+		}
+	]
+}

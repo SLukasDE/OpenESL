@@ -1,0 +1,8 @@
+{
+  "files.exclude": {
+    "build": true
+  },
+  "files.readonlyInclude": {
+    "esl/com/http/client/Connection.h": true
+  }
+}
