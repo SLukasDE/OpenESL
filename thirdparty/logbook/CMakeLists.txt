@@ -17,6 +17,8 @@ if (DEFINED ${PROJECT_NAME}_SHARED_LIBS)
     set(BUILD_SHARED_LIBS "${${PROJECT_NAME}_SHARED_LIBS}")
 endif ()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 option(COMPILE_UNITTESTS "Weather to compile unittests" ON)
 option(BUILD_SHARED_LIBS "Weather to compile shared libs" ON)
 
