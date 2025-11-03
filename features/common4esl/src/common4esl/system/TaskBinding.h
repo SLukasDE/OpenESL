@@ -2,7 +2,6 @@
 #define COMMON4ESL_SYSTEM_TASKBINDING_H_
 
 #include <esl/object/Context.h>
-//#include <esl/object/Event.h>
 #include <esl/system/Task.h>
 #include <esl/system/TaskFactory.h>
 

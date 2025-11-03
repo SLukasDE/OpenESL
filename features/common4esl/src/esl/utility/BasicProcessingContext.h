@@ -23,7 +23,6 @@
 #include <esl/com/http/client/ConnectionFactory.h>
 #include <esl/database/ConnectionFactory.h>
 #include <esl/object/Context.h>
-#include <esl/object/Event.h>
 #include <esl/object/Object.h>
 #include <esl/object/Procedure.h>
 #include <esl/object/ProcessingContext.h>
