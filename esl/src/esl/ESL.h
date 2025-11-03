@@ -77,11 +77,9 @@ SOFTWARE.
 #include <esl/monitoring/OStream.h>
 #include <esl/monitoring/Streams.h>
 
-#include <esl/object/Bean.h>
 #include <esl/object/Cloneable.h>
 #include <esl/object/Context.h>
 #include <esl/object/Control.h>
-#include <esl/object/Event.h>
 #include <esl/object/Implementations.h>
 #include <esl/object/InitializeContext.h>
 #include <esl/object/MetaData.h>
@@ -106,7 +104,6 @@ SOFTWARE.
 #include <esl/system/Stacktrace.h>
 
 #include <esl/utility/Enum.h>
-#include <esl/utility/Event.h>
 #include <esl/utility/HttpMethod.h>
 #include <esl/utility/MIME.h>
 #include <esl/utility/Protocol.h>
