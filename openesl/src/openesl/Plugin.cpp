@@ -3,25 +3,13 @@
 #if __has_include(<openesl/Config.hpp>)
 /* if we build with CMake */
 #include <openesl/Config.hpp>
-#else
-#ifdef TRANSFORMER_ARTEFACT_NAME
-/* if we build with TBuild */
-#define ESL_USE_COMMON4ESL   1
-#define ESL_USE_CURL4ESL     1
-#define ESL_USE_LOGBOOK4ESL  1
-#define ESL_USE_MHD4ESL      1
-#define ESL_USE_SQLITE4ESL   1
-#define ESL_USE_ODBC4ESL     1
-#define ESL_USE_ZSYSTEM4ESL  1
-#define ESL_USE_OPENGTX4ESL  1
-#endif
 #endif
 
 #include <esl/object/Object.h>
 #include <esl/object/ProcessingContext.h>
 #include <esl/system/TaskFactory.h>
 
-#if ESL_USE_COMMON4ESL == 1
+#if HAS_COMMON4ESL
 // std4esl
 #include <esl/object/IntValue.h>
 #include <esl/object/MapStringStringValue.h>
@@ -42,40 +30,40 @@
 #include <esl/system/DefaultTaskFactory.h>
 #endif
 
-#if ESL_USE_CURL4ESL == 1
+#if HAS_CURL4ESL
 // curl4esl
 #include <esl/com/http/client/CURLConnectionFactory.h>
 #endif
 
 // logbook4esl
-#if ESL_USE_LOGBOOK4ESL == 1
+#if HAS_LOGBOOK4ESL
 #include <esl/monitoring/LogbookLogging.h>
 #endif
 
 // mhd4esl
-#if ESL_USE_MHD4ESL == 1
+#if HAS_MHD4ESL
 #include <esl/com/http/server/MHDSocket.h>
 #endif
 
 // sqlite4esl
-#if ESL_USE_SQLITE4ESL == 1
+#if HAS_SQLITE4ESL
 #include <esl/database/SQLiteConnectionFactory.h>
 #endif
 
 // odbc4esl
-#if ESL_USE_ODBC4ESL == 1
+#if HAS_ODBC4ESL
 #include <esl/database/ODBCConnectionFactory.h>
 #endif
 
 // zsystem4esl
-#if ESL_USE_ZSYSTEM4ESL == 1
+#if HAS_ZSYSTEM4ESL
 #include <esl/system/ZSProcess.h>
 #include <esl/system/ZSSignalManager.h>
 #include <esl/system/ZSStacktraceFactory.h>
 #endif
 
 // opengtx4esl
-#if ESL_USE_OPENGTX4ESL == 1
+#if HAS_OPENGTX4ESL
 #include <esl/crypto/GTXKeyStore.h>
 #endif
 
@@ -96,7 +84,7 @@ std::unique_ptr<InterfaceClass> create(const std::vector<std::pair<std::string, 
 void Plugin::install(esl::plugin::Registry& registry, const char* data) {
 	esl::plugin::Registry::set(registry);
 
-#if ESL_USE_COMMON4ESL == 1
+#if HAS_COMMON4ESL
 	// std4esl
 	registry.addPlugin("esl/object/int", esl::object::IntValue::create);
 	registry.addPlugin("esl/object/map<string,string>", esl::object::MapStringStringValue::create);
@@ -121,37 +109,37 @@ void Plugin::install(esl::plugin::Registry& registry, const char* data) {
 #endif
 
 	// curl4esl
-#if ESL_USE_CURL4ESL == 1
+#if HAS_CURL4ESL
 	registry.addPlugin("esl/com/http/client/CURLConnectionFactory", create<esl::com::http::client::ConnectionFactory, esl::com::http::client::CURLConnectionFactory, esl::com::http::client::CURLConnectionFactory::Settings>);
 //	registry.addPlugin("esl/com/http/client/CURLConnectionFactory", esl::com::http::client::CURLConnectionFactory::create);
 #endif
 
 	// logbook4esl
-#if ESL_USE_LOGBOOK4ESL == 1
+#if HAS_LOGBOOK4ESL
 	registry.addPlugin("esl/monitoring/LogbookLogging", esl::monitoring::LogbookLogging::create);
 #endif
 
 
 	// mhd4esl
-#if ESL_USE_MHD4ESL == 1
+#if HAS_MHD4ESL
 	registry.addPlugin("esl/com/http/server/MHDSocket", esl::com::http::server::MHDSocket::create);
 #endif
 
 
 	// sqlite4esl
-#if ESL_USE_SQLITE4ESL == 1
+#if HAS_SQLITE4ESL
 	registry.addPlugin("esl/database/SQLiteConnectionFactory", esl::database::SQLiteConnectionFactory::create);
 #endif
 
 
 	// odbc4esl
-#if ESL_USE_ODBC4ESL == 1
+#if HAS_ODBC4ESL
 	registry.addPlugin("esl/database/ODBCConnectionFactory", esl::database::ODBCConnectionFactory::create);
 #endif
 
 
 	// zsystem4esl
-#if ESL_USE_ZSYSTEM4ESL == 1
+#if HAS_ZSYSTEM4ESL
 	registry.addPlugin("esl/system/ZSProcess", esl::system::ZSProcess::create);
 	registry.addPlugin("esl/system/ZSSignalManager", esl::system::ZSSignalManager::create);
 	registry.addPlugin("esl/system/ZSStacktraceFactory", esl::system::ZSStacktraceFactory::create);
@@ -161,7 +149,7 @@ void Plugin::install(esl::plugin::Registry& registry, const char* data) {
 
 
 	// opengtx4esl
-#if ESL_USE_OPENGTX4ESL == 1
+#if HAS_OPENGTX4ESL
 	registry.addPlugin("esl/crypto/GTXKeyStore", esl::crypto::GTXKeyStore::create);
 #endif
 }

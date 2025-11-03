@@ -1,60 +1,52 @@
-file(GLOB_RECURSE ${PROJECT_NAME}_MAIN_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-file(GLOB_RECURSE ${PROJECT_NAME}_MAIN_INC ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
-list(FILTER ${PROJECT_NAME}_MAIN_INC INCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/esl/.*" )
-set(${PROJECT_NAME}_MAIN_INC_DIR  ${CMAKE_CURRENT_SOURCE_DIR})
+file(GLOB_RECURSE SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
-set_property(GLOBAL PROPERTY ${PROJECT_NAME}_MAIN_SRC     "${${PROJECT_NAME}_MAIN_SRC}")
-set_property(GLOBAL PROPERTY ${PROJECT_NAME}_MAIN_INC     "${${PROJECT_NAME}_MAIN_INC}")
-set_property(GLOBAL PROPERTY ${PROJECT_NAME}_MAIN_INC_DIR "${${PROJECT_NAME}_MAIN_INC_DIR}")
+# load SQLite3
+find_package_SQLite3()
 
-if(ALL_IN_ONE_ESL)
+if(OPENESL_BUILD_ALL_IN_ONE)
+	target_sources(OpenESL PRIVATE ${SRC})
 
-    message(STATUS "Skip building of submodule ${PROJECT_NAME}")
+	target_include_directories(OpenESL
+		PUBLIC
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+			$<INSTALL_INTERFACE:include>
+	)
 
-else(ALL_IN_ONE_ESL)
+	target_link_libraries(OpenESL
+		PUBLIC SQLite::SQLite3
+	)
+else()
+	add_library(sqlite4esl ${SRC})
+	#add_library(sqlite4esl STATIC ${SRC})
 
-    message(STATUS "Building submodule ${PROJECT_NAME}")
+	target_include_directories(sqlite4esl
+		PUBLIC
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+			$<INSTALL_INTERFACE:include>
+	)
 
-    if(MSVC)
-       	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-   	endif()
-	
-    if(${PROJECT_NAME}_MAIN_SRC)
-   	    if (BUILD_SHARED_LIBS)
-       	    message(STATUS "-> lib type is SHARED")
-   	        add_library(${PROJECT_NAME} SHARED)
-        else (BUILD_SHARED_LIBS)
-           	message(STATUS "-> lib type is STATIC")
-       	    add_library(${PROJECT_NAME} STATIC)
-   	    endif (BUILD_SHARED_LIBS)
-        target_sources(${PROJECT_NAME} PRIVATE ${${PROJECT_NAME}_MAIN_SRC})
-   	else(${PROJECT_NAME}_MAIN_SRC)
-       	if (BUILD_SHARED_LIBS)
-           	message(STATUS "-> lib type is INTERFACE (but SHARED has been requested)")
-        else (BUILD_SHARED_LIBS)
-           	message(STATUS "-> lib type is INTERFACE")
-       	endif (BUILD_SHARED_LIBS)
-       	add_library(${PROJECT_NAME} INTERFACE)
-   	endif(${PROJECT_NAME}_MAIN_SRC)
-	
-   	target_sources(${PROJECT_NAME} PUBLIC FILE_SET HEADERS BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} FILES ${${PROJECT_NAME}_MAIN_INC})
+	target_link_libraries(sqlite4esl
+		PRIVATE esl
+		PUBLIC SQLite::SQLite3
+	)
 
-    #add_library(esl::curl4esl ALIAS ${PROJECT_NAME})
-    add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+	install(TARGETS sqlite4esl
+		EXPORT OpenESLTargets
+		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+		INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	)
 
-    target_link_libraries(${PROJECT_NAME} PUBLIC
-        esa::esa
-        esl::esl
-        SQLite::SQLite3)
+	target_link_libraries(OpenESL PUBLIC sqlite4esl)
+endif()
 
-	#target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(OpenESL PUBLIC HAS_SQLITE4ESL)
 
-    install(TARGETS ${PROJECT_NAME}
-        EXPORT ${PROJECT_NAME}Targets
-        FILE_SET HEADERS
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include)
-
-endif(ALL_IN_ONE_ESL)
+# Install sqlite4esl headers
+install(DIRECTORY ./esl/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/esl
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*.hpp"
+)

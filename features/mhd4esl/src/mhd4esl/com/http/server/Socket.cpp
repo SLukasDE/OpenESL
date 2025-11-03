@@ -89,16 +89,22 @@ void mhdRequestCompletedHandler(void* cls,
     *requestContext = nullptr;
 }
 
-bool hasMatchingHostname(const std::string& hostname, const std::string& hostnamePattern) {
+bool hasMatchingHostname(std::string_view hostname, std::string_view hostnamePattern) {
 	logger.debug << "Check if hostname = \"" << hostname << "\" matches to hostnamePatter = \"" << hostnamePattern << "\".\n";
 
 	if(hostnamePattern.empty()) {
 		return true;
 	}
-	else if(hostnamePattern.at(0) == '*') {
-		std::string::size_type patternSize = hostnamePattern.size()-1;
 
-		return (hostname.size() >= patternSize && hostname.substr(hostname.size() - patternSize) == hostnamePattern.substr(1));
+	if(hostnamePattern.at(0) == '*') {
+		// example: hostname = "www.bla.com"
+	    std::size_t hostnamePos = hostname.find('.');
+		hostname = (hostnamePos == std::string::npos) ? "" : hostname.substr(hostnamePos);
+		// result: hostname = ".bla.com"
+
+		// example: hostnamePattern = "*.bla.com"
+		hostnamePattern = hostnamePattern.substr(1);
+		// result: hostnamePattern = ".bla.com"
 	}
 
 	return hostname == hostnamePattern;
