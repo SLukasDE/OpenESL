@@ -1,10 +1,12 @@
 #ifndef COMMON4ESL_CONFIG_CONFIG_H_
 #define COMMON4ESL_CONFIG_CONFIG_H_
 
-#include <tinyxml2.h>
-
 #include <string>
 #include <utility>
+
+namespace tinyxml2 {
+struct XMLElement;
+}
 
 namespace common4esl {
 inline namespace v1_6 {

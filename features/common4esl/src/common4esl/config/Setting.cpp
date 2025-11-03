@@ -1,3 +1,5 @@
+#include <tinyxml2.h>
+
 #include <common4esl/config/Setting.h>
 #include <common4esl/config/FilePosition.h>
 
