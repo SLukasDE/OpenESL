@@ -1,14 +1,5 @@
 include(FetchContent)
 
-#find_package_logbook()
-#find_package_zsystem()
-#find_package_GnuTLS()
-#find_package_CURL()
-#find_package_libmicrohttpd()
-#find_package_SQLite3()
-#find_package_ODBC()
-#find_package_TinyXML2()
-#find_package_RapidJSON()
 
 function(find_package_logbook)
 	include(FetchContent)
