@@ -13,19 +13,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
 #set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# ToDo:
-# - split logbook + logbook4esl
-# - split zsystem + zsystem4esl
-# - Test-Code
-#   Discussion:
-#   - If the target is an .a-File, then it's always possible to build a single .a-File.
-#   - There should be a flag for each feature to build a .so-File instead of an .a-File.
-#     Then it can be used to build a single .a file for all remaining features. Open questions:
-#     - what is about general sources (esl, common4esl, openesl), especially if they are used by .a-Feature and .so-Features?
-#     - each .so-Feature builds its own .so-File, so there is just a single .a-File, but no single .so-File.
-#       -> This is no problem! we don't need a signle .so file. And i would say we don't want a single .so-File.
-#          If we specify already to build .so-Files, then we have a reason for that and
-#          it's no problem to have a seperate .so-file for each feature. 
 set(OPENESL_ENABLE_FEATURES "common4esl;logbook4esl;zsystem4esl;opengtx4esl;curl4esl;mhd4esl;sqlite4esl;odbc4esl" CACHE STRING "List of optional features to build OpenESL library")
 set(OPENESL_USE_SYSTEM_LIBS "" CACHE STRING "List of 3rd party libs to use from system")
 option(OPENESL_BUILD_ALL_IN_ONE  "Enable to build all sources into one signel library" ON)
