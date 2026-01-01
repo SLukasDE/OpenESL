@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+#set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
 #set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(OPENESL_ENABLE_FEATURES "common4esl;logbook4esl;zsystem4esl;opengtx4esl;curl4esl;mhd4esl;sqlite4esl;odbc4esl" CACHE STRING "List of optional features to build OpenESL library")

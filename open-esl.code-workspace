@@ -1,56 +1,56 @@
 {
 	"folders": [
 		{
-			"name": "Main-ESL",
-			"path": "thirdparty/esl/src/main"
+			"name": "Main-esl",
+			"path": "esl/src"
 		},
 		{
-			"name": "Main-Common4esl",
-			"path": "thirdparty/common4esl/src/main"
+			"name": "Main-common4esl",
+			"path": "features/common4esl/src"
 		},
 		{
-			"name": "Main-Curl4esl",
-			"path": "thirdparty/curl4esl/src/main"
+			"name": "Main-curl4esl",
+			"path": "features/curl4esl/src"
+		},
+		{
+			"name": "Main-logbook4esl",
+			"path": "features/logbook4esl/src"
+		},
+		{
+			"name": "Main-mhd4esl",
+			"path": "features/mhd4esl/src"
+		},
+		{
+			"name": "Main-odbc4esl",
+			"path": "features/odbc4esl/src"
+		},
+		{
+			"name": "Main-opengtx4esl",
+			"path": "features/opengtx4esl/src"
+		},
+		{
+			"name": "Main-sqlite4esl",
+			"path": "features/sqlite4esl/src"
+		},
+		{
+			"name": "Main-zsystem4esl",
+			"path": "features/zsystem4esl/src"
+		},
+		{
+			"name": "Main-OpenESL",
+			"path": "openesl/src"
 		},
 		{
 			"name": "Main-Logbook",
 			"path": "thirdparty/logbook/src/main"
 		},
 		{
-			"name": "Main-Logbook4esl",
-			"path": "thirdparty/logbook4esl/src/main"
-		},
-		{
-			"name": "Main-MHD4esl",
-			"path": "thirdparty/mhd4esl/src/main"
-		},
-		{
-			"name": "Main-ODBC4esl",
-			"path": "thirdparty/odbc4esl/src/main"
-		},
-		{
-			"name": "Main-OpenGTX4esl",
-			"path": "thirdparty/opengtx4esl/src/main"
-		},
-		{
-			"name": "Main-SQLite4esl",
-			"path": "thirdparty/sqlite4esl/src/main"
-		},
-		{
 			"name": "Main-TinyXML2",
-			"path": "thirdparty/tinyxml2/src/main"
+			"path": "thirdparty/tinyxml2/"
 		},
 		{
 			"name": "Main-ZSystem",
 			"path": "thirdparty/zsystem/src/main"
-		},
-		{
-			"name": "Main-ZSystem4esl",
-			"path": "thirdparty/zsystem4esl/src/main"
-		},
-		{
-			"name": "Main-OpenESL",
-			"path": "openesl/src/main"
 		}
 	],
 	"settings": {
@@ -58,7 +58,7 @@
 		"workbench.editor.labelFormat": "short",
 		"editor.accessibilityPageSize": 500,
 		"files.readonlyInclude": {
-			"**/thirdparty/common4esl/src/main/esl/io/FilePosition.cpp": true
+			"**/features/common4esl/src/esl/io/FilePosition.cpp": true
 		}
 	}
 }

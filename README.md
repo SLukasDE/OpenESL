@@ -1,10 +1,10 @@
 # OpenESL
 
-OpenESL is a library that bundles ESL together with some open source implementations that realize the APIs of ESL.
+OpenESL is a collection of implementats for the ESL interfaces. Thus, you can use the ESL classes in your application for **logging**, **stacktraces**, **signal handling**, **HTTP communcation**, access to **databases** and much more.
 
 ## What is ESL
 
-ESL just provides a bunch of comfortable APIs, but it contains (almost) no implementations. Hence, ESL alone is not enough. You will also link your code to an ESL compatible **implementation** for the ESL **features** you want to use. For example, if you want to use the **HTTP-Client** API of ESL, you can use the **curl4esl** implementation. The implementation (or plugin) **curl4esl** maps calls of the **HTTP-Client** API of ESL to calls of the API of the CURL library. Of course you can write your own implementations and you can use this mechanism as well to MOCK some parts of your code to implementing unit tests, component test etc. Once you want to change the implementation, you don't need to change the code ouf your applicaition. You just change the implementation. That's it.
+ESL just provides a bunch of comfortable APIs, but it contains (almost) no implementations. Hence, ESL alone is not enough. You will also link your code to an ESL compatible **implementation** for the ESL **features** you want to use. For example, if you want to use the **HTTP-Client** API of ESL, you can use the **curl4esl** implementation. The implementation **curl4esl** maps calls of the **HTTP-Client** API of ESL to calls of the API of the CURL library. Of course you can write your own implementations and you can use this mechanism as well to MOCK some parts of your code to enable the implementation unit tests, component test etc. Once you want to change the implementation, you don't need to change the code ouf your applicaition. You just change the implementation. That's it.
 
 Your code will compile and link even without linking to an implementation. If you call such an API, an exception will be thrown. There are at least 2 features that *work* without an implementation. This is the feature **stacktrace** and **logger**. You can use these two features always, they just don't have an effect if there is no implementation available.
 
@@ -67,33 +67,291 @@ ESL provides an easy to use API to access all type of SQL or SQL-similar databas
 * **Bulk support** is available
 * **Stored Procedures** are supported
 
-## Quick start
+## Prerequisites
 
-Clone and basic build:
+OpenESL works with all features just on Linux (e.g. Ubuntu 22.04) and on Windows by using WSL2.
+We are still working on supporting MacOS and Windows-Native.
 
-```bash
-git clone https://github.com/SLukasDE/open-esl.git
-cd open-esl
-cmake -S . -B build
-cmake --build ./build
+In general you will need a C++ Compiler that supports C++17.
+You can build it with **TBuild** or **CMake 3.30 or later** 
+
+### For Linux and WSL users with Debian or Ubuntu:
+
+* Install a compiler/linker ("clang" or "gcc")
+* Install CMake
+* Install Ninja or GNU Make
+
+E.g. GCC and GNU Make:
+
+```
+sudo apt install cmake build-essential
 ```
 
-| Available features/implemenations | CMake argument               |
-| --------------------------------- | ---------------------------- |
-| common4esl                        | -DOPENESL_USE_COMMON4ESL=ON  |
-| logbook4esl                       | -DOPENESL_USE_LOGBOOK4ESL=ON |
-| zsystem4esl                       | -DOPENESL_USE_ZSYSTEM4ESL=ON |
-| opengtx4esl                       | -DOPENESL_USE_OPENGTX4ESL=ON |
-| curl4esl                          | -DOPENESL_USE_CURL4ESL=ON    |
-| mhd4esl                           | -DOPENESL_USE_MHD4ESL=ON     |
-| sqlite4esl                        | -DOPENESL_USE_SQLITE4ESL=ON  |
-| odbc4esl                          | -DOPENESL_USE_ODBC4ESL=ON    |
+Or Clang and Ninja:
 
-Example: If you want to build OpenESL with the implementations `logbook4esl` and `curl4esl`:
+```
+sudo apt install cmake ninja-build clang lld
+```
 
-```bash
-cmake -S . -B build -DOPENESL_USE_LOGBOOK4ESL=ON -DOPENESL_USE_CURL4ESL=ON
-cmake --build ./build
+## Selecting features
+
+Features are the implementations of ESL interface classes. You will find the source code of each feature in the folder `features`. The most features are just bindings to third party libraries. Thus, a features may have dependencies if it requires other features or third party libraries.
+
+To enable a feature, just add it to the CMake flag `OPENESL_ENABLE_FEATURES`. Other features and third party libraries are automatical added as dependency if necessary.
+
+The following features (implementations) are available:
+
+### common4esl
+
+This feature provides some helper classes that are not part of ESL. Thus, this feature is
+used by other features. Even if you don't enable this feature, it will be enabled if necessary.
+
+Provided implementations of `esl::io::Writer`:
+* `esl::io::input::Closed`
+* `esl::io::input::String`
+
+Provided implementations of `esl::io::Reader`:
+* `esl::io::output::Buffered`
+* `esl::io::output::File`
+* `esl::io::output::Function`
+
+Provided implementations of `esl::io::Producer`:
+* `esl::io::output::Memory`
+* `esl::io::output::String`
+
+Provided implementations of `esl::monitoring::Layout`:
+* `esl::monitoring::SimpleLayout`
+
+Provided implementations of `esl::monitoring::Appender`:
+* `esl::monitoring::MemBufferAppender`
+* `esl::monitoring::OStreamAppender`
+
+Provided implementations of `esl::object::Context`:
+* `esl::object::SimpleContext`
+
+Provided implementations of `esl::object::InitializeContext`:
+* `esl::object::SimpleProcessingContext`
+
+Provided implementations of `esl::object::Command`:
+* `esl::object::SimpleProcessingContext`
+
+Provided implementations of `esl::object::ProcessingContext`:
+* `esl::object::SimpleProcessingContext`
+
+Provided implementations of `esl::object::Procedure`:
+* `esl::object::ExceptionHandlerProcedure`
+
+Provided implementations of `esl::object::Value<T>`:
+* `esl::object::IntValue` with `T = int`
+* `esl::object::MapStringStringValue` with `T = std::map<std::string, std::string>`
+* `esl::object::SetIntValue` with `T = std::set<int>`
+* `esl::object::SetStringValue` with `T = std::set<std::string>`
+* `esl::object::StringValue` with `T = std::string`
+* `esl::object::VectorIntValue` with `T = std::vector<int>`
+* `esl::object::VectorPairStringStringValue` with `T = std::vector<std::pair<std::string, std::string>>`
+* `esl::object::VectorStringValue` with `T = std::vector<std::string>`
+
+Required features:
+(none)
+
+Required third party libraries:
+* TinyXML2
+
+Add `"common4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;common4esl;..."`
+
+### logbook4esl
+
+This feature provides an implementation for the logging framework of esl.
+
+Provided implementations of `esl::monitoring::Logging`:
+* `esl::monitoring::LogbookLogging`
+
+Required features:
+* common4esl
+
+Required third party libraries:
+* logbook
+* TinyXML2
+
+Add `"logbook4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;logbook4esl;..."`
+
+### sqlite4esl
+
+This feature provides access to SQLite databases.
+
+Required features:
+(none)
+
+Required third party libraries:
+* SQLite3
+
+Add `"sqlite4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;sqlite4esl;..."`
+
+### odbc4esl
+
+This feature provides access to databases with ODBC drivers.
+
+Required features:
+(none)
+
+Required third party libraries:
+* ODBC
+
+Add `"odbc4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;odbc4esl;..."`
+
+### curl4esl
+
+This feature enables the implementation of HTTP clients.
+
+Required features:
+* common4esl
+
+Required third party libraries:
+* CURL
+
+Add `"curl4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;curl4esl;..."`
+
+### mhd4esl
+
+This feature enables the implementation of HTTP servers.
+
+Required features:
+* common4esl
+* opengtx4esl
+
+Required third party libraries:
+* libmicrohttpd
+* GnuTLS
+
+Add `"mhd4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;mhd4esl;..."`
+
+### opengtx4esl
+
+This feature provides cryptography functionalities.
+
+Required features:
+(none)
+
+Required third party libraries:
+* GnuTLS
+
+Add `"opengtx4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;opengtx4esl;..."`
+
+### zsystem4esl
+
+This feature provides low-level system functionalities like handling singals, creating a stacktrace and spwaning processes and managing the stdio of the new processes.
+
+Required features:
+* common4esl
+
+Required third party libraries:
+* zsystem
+
+Add `"zsystem4esl"` to CMake flag `OPENESL_ENABLE_FEATURES` to enable this feature.
+E.g. `cmake ... -DOPENESL_ENABLE_FEATURES="...;zsystem4esl;..."`
+
+## Third party libraries
+
+It is recommendet to install these libraries on your system with the package manager and to tell the build-system to use the system-wide installed libraries. This is done by adding the specific library to the CMake flag `OPENESL_USE_SYSTEM_LIBS`. If the library is required and not in the list, it will be built automatically as a local build versions. It is recommendet to install the required third party libraries on your system with the package manager and to add this Library to the CMake flag.
+
+The source code of the libraries is availalbe in the folder `thirdparty`. If you set the CMake flag `OPENESL_USE_OFFLINE_LIBS` to `ON` then you will build the libraries by use the source code from this folder. If you set the flag ton `OFF` then the build system will download the source code from their original location. This makes it easier to work with the latest versions of the third party libraries, but requires a connection to the internet.
+
+### TinyXML2
+
+Add `"TinyXML2"` to the CMake flag `OPENESL_USE_SYSTEM_LIBS` to use the system wide installed version of this library. E.g. `cmake ... -DOPENESL_USE_SYSTEM_LIBS="...;TinyXML2;..."`
+
+You can install this library on Ubuntu like this: `apt install libtinyxml2-dev`
+
+### GnuTLS
+
+Add `"GnuTLS"` to the CMake flag `OPENESL_USE_SYSTEM_LIBS` to use the system wide installed version of this library. E.g. `cmake ... -DOPENESL_USE_SYSTEM_LIBS="...;GnuTLS;..."`
+
+You can install this library on Ubuntu like this: `apt install libgnutls28-dev`
+
+### libmicrohttpd
+
+Add `"libmicrohttpd"` to the CMake flag `OPENESL_USE_SYSTEM_LIBS` to use the system wide installed version of this library. E.g. `cmake ... -DOPENESL_USE_SYSTEM_LIBS="...;libmicrohttpd;..."`
+
+You can install this library on Ubuntu like this: `apt install libmicrohttpd-dev`
+
+### CURL
+
+Add `"CURL"` to the CMake flag `OPENESL_USE_SYSTEM_LIBS` to use the system wide installed version of this library. E.g. `cmake ... -DOPENESL_USE_SYSTEM_LIBS="...;CURL;..."`
+
+You can install this library on Ubuntu like this: `apt install libcurl4-gnutls-dev`
+
+### ODBC
+
+Add `"ODBC"` to the CMake flag `OPENESL_USE_SYSTEM_LIBS` to use the system wide installed version of this library. E.g. `cmake ... -DOPENESL_USE_SYSTEM_LIBS="...;ODBC;..."`
+
+You can install this library on Ubuntu like this: `apt install unixodbc-dev`
+
+### SQLite3
+
+Add `"SQLite3"` to the CMake flag `OPENESL_USE_SYSTEM_LIBS` to use the system wide installed version of this library. E.g. `cmake ... -DOPENESL_USE_SYSTEM_LIBS="...;SQLite3;..."`
+
+You can install this library on Ubuntu like this: `apt install libsqlite3-dev`
+
+### logbook
+
+There is no install package available to install logbook system wide. Thus don't add it to the CMake flag `OPENESL_USE_SYSTEM_LIBS`.
+
+### zsystem
+
+There is no install package available to install logbook system wide. Thus don't add it to the CMake flag `OPENESL_USE_SYSTEM_LIBS`.
+
+## Other flags
+
+### Single library
+
+If the CMake flag `OPENESL_BUILD_ALL_IN_ONE` is set to `OFF`, then you will get a separat library for each feature (e.g. libcommon4esl.so etc.) and the OpenESL library (e.g. libOpenESL.so) needs this libraries as dependency.
+
+Set the CMake flag `OPENESL_BUILD_ALL_IN_ONE` to `ON` to build add all features into the OpenESL library.
+
+### Shared vs static library
+
+Set the CMake flag `BUILD_SHARED_LIBS` to `OFF` to build a **static library** (libOpenESL.a). If you set this flag to `ON`, then you will build a **shared library** (libOpenESL.so).
+
+## Build
+
+### Get the source code
+
+Use "git" to get the source code:
+
+```
+git clone https://github.com/SLukasDE/OpenESL
+```
+
+### Build OpenESL from source code:
+
+Enter the 
+```
+cmake -G "Unix Makefiles" \
+   -S ./OpenESL \
+   -B ./OpenESL/build \
+   -DCMAKE_INSTALL_PREFIX=$(pwd)/OpenESL-installed \
+   -DOPENESL_BUILD_ALL_IN_ONE=ON \
+   -DOPENESL_USE_OFFLINE_LIBS=ON \
+   -DOPENESL_ENABLE_FEATURES="sqlite4esl;odbc4esl;logbook4esl;curl4esl;common4esl;mhd4esl;opengtx4esl;zsystem4esl" \
+   -DOPENESL_USE_SYSTEM_LIBS="GnuTLS;TinyXML2;libmicrohttpd;CURL;ODBC;SQLite3" \
+   -DBUILD_SHARED_LIBS=ON
+cmake --build ./OpenESL/build
+cmake --install ./OpenESL/build
+```
+
+You can use "Ninja" instead of "Unix Makefiles":
+
+```
+cmake -G "Ninja" \
+   -S ./OpenESL \
+   ...
 ```
 
 ## Tutorial
