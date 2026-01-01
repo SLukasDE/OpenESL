@@ -1,0 +1,38 @@
+file(GLOB_RECURSE SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+
+if(OPENESL_BUILD_ALL_IN_ONE)
+	target_sources(OpenESL PRIVATE ${SRC})
+
+	target_include_directories(OpenESL
+		PUBLIC
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+			$<INSTALL_INTERFACE:include>
+	)
+else()
+	add_library(esl ${SRC})
+	#add_library(esl STATIC ${SRC})
+
+	target_include_directories(esl
+		PUBLIC
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+			$<INSTALL_INTERFACE:include>
+	)
+
+	install(TARGETS esl
+		EXPORT OpenESLTargets
+		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+		INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	)
+	
+	target_link_libraries(OpenESL PUBLIC esl)
+endif()
+
+# Install esl headers
+install(DIRECTORY ./
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*.hpp"
+)

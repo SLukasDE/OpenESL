@@ -1,171 +1,239 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.16)
 
 project(
-    openesl
+    OpenESL
     VERSION 1.6.0
     LANGUAGES C CXX)
 
+# C++ Standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-list(APPEND CMAKE_MODULE_PATH "${${PROJECT_NAME}_SOURCE_DIR}/cmake")
-include(Packages)
-#find_package_RapidJSON()
+#set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+#set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+set(OPENESL_ENABLE_FEATURES "common4esl;logbook4esl;zsystem4esl;opengtx4esl;curl4esl;mhd4esl;sqlite4esl;odbc4esl" CACHE STRING "List of optional features to build OpenESL library")
+set(OPENESL_USE_SYSTEM_LIBS "" CACHE STRING "List of 3rd party libs to use from system")
+option(OPENESL_BUILD_ALL_IN_ONE  "Enable to build all sources into one signel library" ON)
+option(OPENESL_ENABLE_TEST       "Enable to build and execute unit tests" ON)
+option(OPENESL_USE_OFFLINE_LIBS  "Enable to use the pre-downloaded binaries/sources. Disable to download binaries/source code. This only effects to non-sysm-libs"   OFF)
+
+# remaining third party libs:
+option(OPENESL_ENABLE_ZLIB         "Add ZLib"                          OFF)
+option(OPENESL_ENABLE_IDN2         "Add IDN2"                          OFF)
+option(OPENESL_ENABLE_NETTLE       "Add NETTLE"                        OFF)
+
+include(FetchContent)
+
+# Configure some variables for installation pathes, like CMAKE_INSTALL_BINDIR, CMAKE_INSTALL_LIBDIR, ...
+# This shoud work for Windows as well. But on Windows DLLs (not .lib) should be put into bin-dir :-/
+include(GNUInstallDirs)
+
+# Load helper functions 'configure_package_config_file' and 'write_basic_package_version_file'
+include(CMakePackageConfigHelpers)
+
+# Functions to load 3rd party libraries
+include(cmake/Packages.cmake)
+
+# validate system libs
+foreach(lib ${OPENESL_USE_SYSTEM_LIBS})
+	if(NOT lib STREQUAL "" AND
+	   NOT lib STREQUAL "GnuTLS" AND
+	   NOT lib STREQUAL "libmicrohttpd" AND
+	   NOT lib STREQUAL "CURL" AND
+	   NOT lib STREQUAL "ODBC" AND
+	   NOT lib STREQUAL "SQLite3" AND
+	   NOT lib STREQUAL "TinyXML2")
+		message(WARNING "OpenESL: Definition of unknown system library '${lib}'.\nPlease check the settings of 'OPENESL_USE_SYSTEM_LIBS'.\n'OPENESL_USE_SYSTEM_LIBS'=${OPENESL_USE_SYSTEM_LIBS}")
+	endif()
+endforeach()
 
 
-option(ALL_IN_ONE_ESL              "Weather to compile a single library instead of many small librariers"  ON)
-option(BUILD_SHARED_LIBS           "Weather to compile a shared library instead of a static library"       OFF)
-option(COMPILE_UNITTESTS           "Weather to compile unittests"                                          ON)
-option(ESL_DEPENDENCIES_USE_CONAN  "Weather to use Conan as package manager to fetch dependencies"         OFF)
-option(ESL_DEPENDENCIES_USE_VCPKG  "Weather to use Vcpkg as package manager to fetch dependencies"         OFF)
+# validate and update enabled features
+#set(OPENESL_ENABLE_FEATURE_LOGBOOK4ESL OFF CACHE BOOL "build logbook4esl enabled" FORCE)
+#set(OPENESL_ENABLE_FEATURE_COMMON4ESL  OFF CACHE BOOL "build common4esl enabled"  FORCE)
+#set(OPENESL_ENABLE_FEATURE_MHD4ESL     OFF CACHE BOOL "build mhd4esl enabled"     FORCE)
+#set(OPENESL_ENABLE_FEATURE_OPENGTX4ESL OFF CACHE BOOL "build opengtx4esl enabled" FORCE)
+set(OPENESL_ENABLE_FEATURE_LOGBOOK4ESL OFF)
+set(OPENESL_ENABLE_FEATURE_COMMON4ESL  OFF)
+set(OPENESL_ENABLE_FEATURE_MHD4ESL     OFF)
+set(OPENESL_ENABLE_FEATURE_OPENGTX4ESL OFF)
+set(OPENESL_ENABLE_FEATURE_ZSYSTEM4ESL OFF)
+set(OPENESL_ENABLE_FEATURE_CURL4ESL    OFF)
+set(OPENESL_ENABLE_FEATURE_SQLITE4ESL  OFF)
+set(OPENESL_ENABLE_FEATURE_ODBC4ESL    OFF)
 
-option(OPENESL_USE_COMMON4ESL   "Weather to include common4esl"   ON) #
-option(OPENESL_USE_LOGBOOK4ESL  "Weather to include logbook4esl"  ON) #
-option(OPENESL_USE_ZSYSTEM4ESL  "Weather to include zsystem4esl"  ON)
-option(OPENESL_USE_OPENGTX4ESL  "Weather to include opengtx4esl"  ON) #
-option(OPENESL_USE_CURL4ESL     "Weather to include curl4esl"     ON) #
-option(OPENESL_USE_MHD4ESL      "Weather to include mhd4esl"      ON) #
-option(OPENESL_USE_SQLITE4ESL   "Weather to include sqlite4esl"   ON) #
-option(OPENESL_USE_ODBC4ESL     "Weather to include odbc4esl"     ON)
+foreach(feature ${OPENESL_ENABLE_FEATURES})
+	if(feature STREQUAL "")
+	elseif(feature STREQUAL "logbook4esl")
+		#set(OPENESL_ENABLE_FEATURE_LOGBOOK4ESL ON CACHE BOOL "build ${feature} enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_LOGBOOK4ESL ON)
+		
+		# dependencies of logbook4esl:
+		# - common4esl
+        message(STATUS "OpenESL: implicitly enabling common4esl by ${feature}")
+		#set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON CACHE BOOL "build common4esl enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON)
+	elseif(feature STREQUAL "zsystem4esl")
+		#set(OPENESL_ENABLE_FEATURE_ZSYSTEM4ESL ON CACHE BOOL "build ${feature} enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_ZSYSTEM4ESL ON)
+		
+		# dependencies of zsystem4esl:
+		# - common4esl: esl/system/ZSSignalManager.cpp ->  #include <esl/utility/String.h>
+        message(STATUS "OpenESL: implicitly enabling common4esl by ${feature}")
+		#set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON CACHE BOOL "build common4esl enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON)
+	elseif(feature STREQUAL "curl4esl")
+		#set(OPENESL_ENABLE_FEATURE_CURL4ESL ON CACHE BOOL "build ${feature} enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_CURL4ESL ON)
+		
+		# dependencies of curl4esl:
+		# - common4esl
+        message(STATUS "OpenESL: implicitly enabling common4esl by ${feature}")
+		#set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON CACHE BOOL "build common4esl enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON)
+	elseif(feature STREQUAL "mhd4esl")
+		#set(OPENESL_ENABLE_FEATURE_MHD4ESL ON CACHE BOOL "build ${feature} enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_MHD4ESL ON)
+		
+		# dependencies of mhd4esl:
+		# - common4esl: esl/com/http/server/MHDSocket.cpp -> #include <esl/utility/String.h>
+		# - opengtx4esl
+        message(STATUS "OpenESL: implicitly enabling common4esl by ${feature}")
+		#set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON CACHE BOOL "build common4esl enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON)
+        message(STATUS "OpenESL: implicitly enabling opengtx4esl by ${feature}")
+		#set(OPENESL_ENABLE_FEATURE_OPENGTX4ESL ON CACHE BOOL "build opengtx4esl enabled" FORCE)
+		set(OPENESL_ENABLE_FEATURE_OPENGTX4ESL ON)
+	elseif(feature STREQUAL "common4esl")
+		set(OPENESL_ENABLE_FEATURE_COMMON4ESL ON)
+	elseif(feature STREQUAL "opengtx4esl")
+		set(OPENESL_ENABLE_FEATURE_OPENGTX4ESL ON)
+	elseif(feature STREQUAL "sqlite4esl")
+		set(OPENESL_ENABLE_FEATURE_SQLITE4ESL ON)
+	elseif(feature STREQUAL "odbc4esl")
+		set(OPENESL_ENABLE_FEATURE_ODBC4ESL ON)
+	else()
+		message(FATAL_ERROR "OpenESL: Definition of unknown feature '${feature}'. Please check your settings of 'OPENESL_ENABLE_FEATURES'")
+	endif()
+endforeach()
 
-####################
-# fix dependencies #
-####################
 
-# dependencies of logbook4esl:
-# - common4esl
-if(OPENESL_USE_LOGBOOK4ESL AND NOT OPENESL_USE_COMMON4ESL)
-    message(STATUS "common4esl has been included because of its dependency in logbook4esl")
-    set(OPENESL_USE_COMMON4ESL ON)
+# thirdparty:
+if(OPENESL_ENABLE_ZLIB)
+    message(STATUS "OpenESL: ZLib enabled")
+#    add_subdirectory(thirdparty/esl_zlib)
 endif()
 
-# dependencies of mhd4esl:
-# - common4esl
-# - opengtx4esl
-if(OPENESL_USE_MHD4ESL AND NOT OPENESL_USE_COMMON4ESL)
-    message(STATUS "common4esl has been included because of its dependency in mhd4esl")
-    set(OPENESL_USE_COMMON4ESL ON)
-endif()
-if(OPENESL_USE_MHD4ESL AND NOT OPENESL_USE_OPENGTX4ESL)
-    message(STATUS "opengtx4esl has been included because of its dependency in mhd4esl")
-    set(OPENESL_USE_OPENGTX4ESL ON)
+if(OPENESL_ENABLE_IDN2)
+    message(STATUS "OpenESL: IDN2 enabled")
+#    add_subdirectory(thirdparty/esl_idn2)
 endif()
 
-function(add_esl_feature feature dependency)
-    #add_subdirectory(thirdparty/${feature})
-
-    if(ALL_IN_ONE_ESL)
-        get_property(TMP_MAIN_SRC     GLOBAL PROPERTY ${feature}_MAIN_SRC)
-        get_property(TMP_MAIN_INC     GLOBAL PROPERTY ${feature}_MAIN_INC)
-        get_property(TMP_MAIN_INC_DIR GLOBAL PROPERTY ${feature}_MAIN_INC_DIR)
-
-        list(APPEND ALL_ESL_MAIN_SRC ${TMP_MAIN_SRC})
-        list(FILTER ALL_ESL_MAIN_SRC EXCLUDE REGEX "${TMP_MAIN_INC_DIR}/lib.cpp" )
-        set(ALL_ESL_MAIN_SRC ${ALL_ESL_MAIN_SRC} PARENT_SCOPE)
-
-        list(APPEND ALL_ESL_MAIN_INC ${TMP_MAIN_INC})
-        set(ALL_ESL_MAIN_INC ${ALL_ESL_MAIN_INC} PARENT_SCOPE)
-
-        list(APPEND ALL_ESL_MAIN_INC_DIRS ${TMP_MAIN_INC_DIR})
-        set(ALL_ESL_MAIN_INC_DIRS ${ALL_ESL_MAIN_INC_DIRS} PARENT_SCOPE)
-
-        if(NOT dependency STREQUAL "")
-            list(APPEND ALL_ESL_MAIN_LIBS "${dependency}")
-            set(ALL_ESL_MAIN_LIBS ${ALL_ESL_MAIN_LIBS} PARENT_SCOPE)
-        endif()
-
-    else(ALL_IN_ONE_ESL)
-        if(feature STREQUAL "esa" OR feature STREQUAL "esl")
-        else()
-            string(TOUPPER ${feature} featureUpperCase)
-            set(FIND_DEPENDENCY_${featureUpperCase} "find_dependency(${feature})" PARENT_SCOPE)
-        endif()
-
-        if(dependency STREQUAL "")
-            list(APPEND ALL_ESL_MAIN_LIBS "${feature}::${feature}")
-        else()
-            list(APPEND ALL_ESL_MAIN_LIBS "${dependency}" "${feature}::${feature}")
-        endif()
-        set(ALL_ESL_MAIN_LIBS ${ALL_ESL_MAIN_LIBS} PARENT_SCOPE)
-        
-    endif(ALL_IN_ONE_ESL)
-endfunction()
-
-
-find_package_esl()
-add_esl_feature(esl "")
-
-if(OPENESL_USE_COMMON4ESL)
-    find_package_common4esl()
-    add_esl_feature(common4esl tinyxml2::tinyxml2)
-    find_package_TinyXML2()
-    set(DEFINE_USE_COMMON4ESL "1")
-else()
-    set(DEFINE_USE_COMMON4ESL "0")
+if(OPENESL_ENABLE_NETTLE)
+    message(STATUS "OpenESL: NETTLE enabled")
+#    add_subdirectory(thirdparty/esl_nettle)
 endif()
 
-if(OPENESL_USE_LOGBOOK4ESL)
-    find_package_logbook4esl()
-    add_esl_feature(logbook4esl "tinyxml2::tinyxml2;logbook::logbook")
-    find_package_logbook()
-    set(DEFINE_USE_LOGBOOK4ESL "1")
-else()
-    set(DEFINE_USE_LOGBOOK4ESL "0")
+
+
+
+add_library(OpenESL "")
+#add_library(OpenESL STATIC "")
+
+
+# always add esl
+add_subdirectory(esl)
+
+
+# common4esl:
+#if("common4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_COMMON4ESL)
+    message(STATUS "OpenESL: common4esl enabled")
+    add_subdirectory(features/common4esl)
 endif()
 
-if(OPENESL_USE_ZSYSTEM4ESL)
-    find_package_zsystem4esl()
-    add_esl_feature(zsystem4esl zsystem::zsystem)
-    find_package_zsystem()
-    set(DEFINE_USE_ZSYSTEM4ESL "1")
-else()
-    set(DEFINE_USE_ZSYSTEM4ESL "0")
+# opengtx4esl:
+#if("opengtx4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_OPENGTX4ESL)
+    message(STATUS "OpenESL: opengtx4esl enabled")
+    add_subdirectory(features/opengtx4esl)
 endif()
 
-if(OPENESL_USE_OPENGTX4ESL)
-    find_package_opengtx4esl()
-    add_esl_feature(opengtx4esl GnuTLS::GnuTLS)
-    find_package_GnuTLS()
-    set(DEFINE_USE_OPENGTX4ESL "1")
-else()
-    set(DEFINE_USE_OPENGTX4ESL "0")
+# logbook4esl:
+#if("logbook4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_LOGBOOK4ESL)
+    message(STATUS "OpenESL: logbook4esl enabled")
+    add_subdirectory(features/logbook4esl)
 endif()
 
-if(OPENESL_USE_CURL4ESL)
-    find_package_curl4esl()
-    add_esl_feature(curl4esl CURL::libcurl)
-    find_package_CURL()
-    set(DEFINE_USE_CURL4ESL "1")
-else()
-    set(DEFINE_USE_CURL4ESL "0")
+# mhd4esl:
+#if("mhd4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_MHD4ESL)
+    message(STATUS "OpenESL: mhd4esl enabled")
+    add_subdirectory(features/mhd4esl)
 endif()
 
-if(OPENESL_USE_MHD4ESL)
-    find_package_mhd4esl()
-    add_esl_feature(mhd4esl libmicrohttpd::libmicrohttpd)
-    find_package_libmicrohttpd()
-    set(DEFINE_USE_MHD4ESL "1")
-else()
-    set(DEFINE_USE_MHD4ESL "0")
+# zsystem4esl:
+#if("zsystem4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_ZSYSTEM4ESL)
+    message(STATUS "OpenESL: zsystem4esl enabled")
+    add_subdirectory(features/zsystem4esl)
 endif()
 
-if(OPENESL_USE_SQLITE4ESL)
-    find_package_sqlite4esl()
-    add_esl_feature(sqlite4esl SQLite::SQLite3)
-    find_package_SQLite3()
-    set(DEFINE_USE_SQLITE4ESL "1")
-else()
-    set(DEFINE_USE_SQLITE4ESL "0")
+# curl4esl:
+#if("curl4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_CURL4ESL)
+    message(STATUS "OpenESL: curl4esl enabled")
+    add_subdirectory(features/curl4esl)
 endif()
 
-if(OPENESL_USE_ODBC4ESL)
-    find_package_odbc4esl()
-    add_esl_feature(odbc4esl ODBC::ODBC)
-    find_package_ODBC()
-    set(DEFINE_USE_ODBC4ESL "1")
-else()
-    set(DEFINE_USE_ODBC4ESL "0")
+# sqlite4esl:
+#if("sqlite4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_SQLITE4ESL)
+    message(STATUS "OpenESL: sqlite4esl enabled")
+    add_subdirectory(features/sqlite4esl)
 endif()
 
+# odbc4esl:
+#if("odbc4esl" IN_LIST OPENESL_ENABLE_FEATURES)
+if(OPENESL_ENABLE_FEATURE_ODBC4ESL)
+    message(STATUS "OpenESL: odbc4esl enabled")
+    add_subdirectory(features/odbc4esl)
+endif()
+
+
+# finally we need to add openesl to glue everthing together
 add_subdirectory(openesl)
+
+
+
+
+# Export targets
+install(EXPORT OpenESLTargets
+    FILE OpenESLTargets.cmake
+    NAMESPACE OpenESL::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OpenESL
+)
+
+# Create config file
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/OpenESLConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/OpenESLConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OpenESL
+)
+
+# Create version file
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/OpenESLConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+# Install config file and version file
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/OpenESLConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/OpenESLConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/OpenESL
+)
